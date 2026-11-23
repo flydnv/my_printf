@@ -25,7 +25,7 @@ int my_put_signed(int n){
     int count = 0;
     long num =n;
     if(num < 0){
-        return count += my_putchar('-');
+        count += my_putchar('-');
         num = -num;
     }
     count += my_put_unsigned(num);
@@ -48,7 +48,7 @@ int my_put_hex(unsigned long n){
     if(n>=16){
         count += my_put_hex(n/16);
     }
-    count += my_putchar(hex[n]);
+    count += my_putchar(hex[n%16]);
     return count;
 }
 
@@ -61,11 +61,11 @@ int handle_specifier(char spec, va_list args){
     }
     if(spec == '%')
         return my_putchar('%');
-    return my_putchar('%') + my_putchar(spec);
     if (spec == 'u')
         return (my_put_unsigned(va_arg(args, unsigned int)));
     if (spec == 'd')
         return (my_put_signed(va_arg(args, int)));
+    return my_putchar('%') + my_putchar(spec);
 }   
 
 int my_printf(char * restrict format, ...){
