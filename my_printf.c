@@ -42,14 +42,23 @@ int my_put_octal(unsigned int n)
     return (count);
 }
 
-int my_put_hex(unsigned long n){
+int my_put_hex(unsigned long n, char *hex){
     int count=0;
-    char *hex = "0123456789abcdef";
     if(n>=16){
-        count += my_put_hex(n/16);
+        count += my_put_hex(n/16,hex);
     }
     count += my_putchar(hex[n%16]);
     return count;
+}
+int my_put_ptr(void *ptr)
+{
+    int count = 0;
+
+    if (!ptr)
+        return (my_putstr("(nil)"));
+    count += my_putstr("0x");
+    count += my_put_hex((unsigned long)ptr, "0123456789abcdef");
+    return (count);
 }
 
 int handle_specifier(char spec, va_list args){
@@ -65,6 +74,12 @@ int handle_specifier(char spec, va_list args){
         return (my_put_unsigned(va_arg(args, unsigned int)));
     if (spec == 'd')
         return (my_put_signed(va_arg(args, int)));
+    if (spec == 'o')
+        return (my_put_octal(va_arg(args, unsigned int)));
+    if (spec == 'x')
+        return (my_put_hex(va_arg(args, unsigned int), "0123456789ABCDEF"));
+    if (spec == 'p')
+        return (my_put_ptr(va_arg(args, void *)));
     return my_putchar('%') + my_putchar(spec);
 }   
 
