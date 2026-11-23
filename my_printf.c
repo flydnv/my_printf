@@ -13,6 +13,44 @@ int my_putstr(char *c){
         len += my_putchar(c[len]);
     return len;
 }
+int my_put_unsigned(unsigned int n)
+{
+    int count = 0;
+    if(n>=10)
+        count += my_put_unsigned(n/10);
+    count += my_putchar((n%10) + '0');
+    return count;
+}
+int my_put_signed(int n){
+    int count = 0;
+    long num =n;
+    if(num < 0){
+        return count += my_putchar('-');
+        num = -num;
+    }
+    count += my_put_unsigned(num);
+    return(count);
+}
+
+int my_put_octal(unsigned int n)
+{
+    int count =0;
+    if(n>=8){
+        count += my_put_octal(n/8);
+    }
+    count += my_putchar((n%8)+ '0');
+    return (count);
+}
+
+int my_put_hex(unsigned long n){
+    int count=0;
+    char *hex = "0123456789abcdef";
+    if(n>=16){
+        count += my_put_hex(n/16);
+    }
+    count += my_putchar(hex[n]);
+    return count;
+}
 
 int handle_specifier(char spec, va_list args){
     if(spec == 'c'){
@@ -24,7 +62,10 @@ int handle_specifier(char spec, va_list args){
     if(spec == '%')
         return my_putchar('%');
     return my_putchar('%') + my_putchar(spec);
-
+    if (spec == 'u')
+        return (my_put_unsigned(va_arg(args, unsigned int)));
+    if (spec == 'd')
+        return (my_put_signed(va_arg(args, int)));
 }   
 
 int my_printf(char * restrict format, ...){
